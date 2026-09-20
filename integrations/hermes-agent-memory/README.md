@@ -19,8 +19,11 @@ The same backend serves both runtimes — OpenClaw agents and Hermes agents shar
 ## Prerequisites
 
 - Working Open Brain setup ([guide](../../docs/01-getting-started.md))
-- [`schemas/agent-memory`](../../schemas/agent-memory/) applied
-- [`integrations/agent-memory-api`](../agent-memory-api/) deployed
+- [`schemas/agent-memory`](../../schemas/agent-memory/) applied for the
+  Supabase-compatible deployment, or the OCI migration
+  `integrations/oci-node/migrations/002_agent_memory_scope.sql`
+- An Agent Memory API endpoint: native OCI `/agent-memory` or the compatible
+  Supabase `agent-memory-api`
 - Hermes Agent 0.13.0+ installed
 - Python 3.11+
 
@@ -77,7 +80,7 @@ The plugin reads non-secret config from `~/.hermes/ob1.json` and the access key 
 ```bash
 cat > ~/.hermes/ob1.json <<'EOF'
 {
-  "endpoint": "http://localhost:8000/functions/v1/agent-memory-api",
+  "endpoint": "http://<tailscale-host>:8787/agent-memory",
   "workspace_id": "default",
   "project_id": null,
   "auto_recall": true,
@@ -93,7 +96,7 @@ EOF
 
 ```bash
 echo 'OPENBRAIN_KEY=<your-mcp-access-key>' >> ~/.hermes/.env
-echo 'OPENBRAIN_URL=http://localhost:8000/functions/v1/agent-memory-api' >> ~/.hermes/.env
+echo 'OPENBRAIN_URL=http://<tailscale-host>:8787/agent-memory' >> ~/.hermes/.env
 ```
 
 **3. Tell Hermes to use the provider:**
@@ -169,7 +172,11 @@ If the value is `auto` for the provider field, the plugin derives the provider f
 
 ### Recall returns 0 memories even when matches obviously exist
 
-The OB1 Agent Memory API uses `match_thoughts(threshold=0.7)` against `text-embedding-3-small`, which is strict. Related items often score 0.4–0.6. If your fleet uses queries that are conceptually similar but not lexically close, lower the threshold in `match_thoughts` or override it in your fork of `agent-memory-api/index.ts`.
+Confirm that the request uses the same `workspace_id` and, when applicable,
+`project_id` as the write-back. The native OCI service filters scope before
+hybrid semantic/full-text ranking and excludes pending records unless
+`include_unconfirmed` is explicitly requested and permitted by the grant.
+Generated memories remain evidence until reviewed.
 
 ### `HTTP 400 Invalid input` errors in Hermes logs
 

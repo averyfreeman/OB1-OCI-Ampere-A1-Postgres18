@@ -57,6 +57,18 @@
         "type": "string",
         "description": "Default OB1 project ID."
       },
+      "sessionId": {
+        "type": "string",
+        "description": "Optional stable session ID for long-running conversations; per-call session IDs take precedence."
+      },
+      "agentId": {
+        "type": "string",
+        "description": "Optional logical agent identity used for personal-memory ownership."
+      },
+      "clientSurface": {
+        "type": "string",
+        "description": "Audit label for the client surface, such as openclaw-code."
+      },
       "requireReviewByDefault": {
         "type": "boolean",
         "description": "Keep agent-written memory pending review by default.",

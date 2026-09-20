@@ -1,7 +1,8 @@
 """OB1 (OpenBrain) memory provider for Hermes Agent.
 
 Connects Hermes agents to Nate Jones' OpenBrain governed memory system.
-The backend is a Supabase Edge Function ("agent-memory-api") that exposes
+The backend can be the OCI-native `/agent-memory` service (or the compatible
+Supabase Edge Function) that exposes
 the OB1 v1 memory contract: recall, writeback, review queue, recall traces,
 usage reporting, inspection.
 
@@ -429,14 +430,20 @@ def _format_recall_context(memories: List[Dict[str, Any]], max_results: int) -> 
 class _OB1Client:
     """Thin sync HTTP client for the OB1 Agent Memory API.
 
-    Uses x-brain-key header (NOT Authorization Bearer) per the OB1 contract.
+    Uses x-brain-key header per the OB1 contract. The OCI service also accepts
+    the equivalent Authorization: Bearer form for MCP clients.
     All methods raise on transport errors; callers wrap appropriately.
     """
 
-    def __init__(self, endpoint: str, access_key: str, timeout: float):
+    def __init__(self, endpoint: str, access_key: str, timeout: float,
+                 session_id: Optional[str] = None, agent_id: Optional[str] = None,
+                 client_surface: Optional[str] = None):
         self._endpoint = endpoint.rstrip("/")
         self._access_key = access_key
         self._timeout = timeout
+        self._session_id = session_id or ""
+        self._agent_id = agent_id or ""
+        self._client_surface = client_surface or "hermes"
 
     def _request(self, method: str, path: str, *, body: Optional[dict] = None) -> dict:
         url = f"{self._endpoint}{path}"
@@ -469,8 +476,12 @@ class _OB1Client:
                runtime: Optional[dict] = None,
                task_id: Optional[str] = None,
                flow_id: Optional[str] = None,
-               model_intent: Optional[dict] = None) -> dict:
-        # The Edge Function's writeback path stores memories with
+               model_intent: Optional[dict] = None,
+               session_id: Optional[str] = None,
+               agent_id: Optional[str] = None,
+               client_surface: Optional[str] = None,
+               intent_hint: Optional[str] = None) -> dict:
+        # The compatible writeback path stores memories with
         # visibility="personal" by default, and its scopeMatches() filter at
         # /recall drops personal memories unless scope.visibility="personal" is
         # passed. So we always set scope.visibility="personal" to match what
@@ -500,6 +511,15 @@ class _OB1Client:
             body["task_id"] = task_id
         if flow_id:
             body["flow_id"] = flow_id
+        resolved_session_id = session_id or self._session_id
+        resolved_agent_id = agent_id or self._agent_id
+        if resolved_session_id:
+            body["session_id"] = resolved_session_id
+        if resolved_agent_id:
+            body["agent_id"] = resolved_agent_id
+        body["client_surface"] = client_surface or self._client_surface
+        if intent_hint:
+            body["intent_hint"] = intent_hint
         return self._request("POST", "/recall", body=body)
 
     def writeback(self, *, workspace_id: str, project_id: Optional[str],
@@ -511,7 +531,11 @@ class _OB1Client:
                   task_id: Optional[str] = None,
                   flow_id: Optional[str] = None,
                   step_id: Optional[str] = None,
-                  idempotency_key: Optional[str] = None) -> dict:
+                  idempotency_key: Optional[str] = None,
+                  session_id: Optional[str] = None,
+                  agent_id: Optional[str] = None,
+                  client_surface: Optional[str] = None,
+                  intent_hint: Optional[str] = None) -> dict:
         body: dict = {
             "schema_version": _WRITEBACK_SCHEMA_VERSION,
             "workspace_id": workspace_id,
@@ -535,6 +559,15 @@ class _OB1Client:
             body["step_id"] = step_id
         if idempotency_key:
             body["idempotency_key"] = idempotency_key
+        resolved_session_id = session_id or self._session_id
+        resolved_agent_id = agent_id or self._agent_id
+        if resolved_session_id:
+            body["session_id"] = resolved_session_id
+        if resolved_agent_id:
+            body["agent_id"] = resolved_agent_id
+        body["client_surface"] = client_surface or self._client_surface
+        if intent_hint:
+            body["intent_hint"] = intent_hint
         return self._request("POST", "/writeback", body=body)
 
     def report_usage(self, request_id: str, *, used: List[str],
@@ -740,7 +773,7 @@ class OB1MemoryProvider(MemoryProvider):
         return [
             {
                 "key": "endpoint",
-                "description": "OB1 Agent Memory API URL (e.g. http://localhost:8000/functions/v1/agent-memory-api)",
+                "description": "OB1 Agent Memory API URL (e.g. http://<tailscale-host>:8787/agent-memory)",
                 "secret": False,
                 "required": True,
             },
@@ -847,6 +880,9 @@ class OB1MemoryProvider(MemoryProvider):
                     endpoint=self._endpoint,
                     access_key=self._access_key,
                     timeout=self._api_timeout,
+                    session_id=self._session_id,
+                    agent_id=self._agent_identity,
+                    client_surface=f"hermes:{self._platform}",
                 )
                 # Optional health probe — log warning if unreachable but keep
                 # provider active so the agent can still operate.

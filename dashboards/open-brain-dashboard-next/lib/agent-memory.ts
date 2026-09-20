@@ -15,7 +15,9 @@ const AGENT_MEMORY_API_URL =
 
 function deriveAgentMemoryUrl(restUrl?: string) {
   if (!restUrl) return undefined;
-  return restUrl.replace(/\/open-brain-rest\/?$/, "/agent-memory-api");
+  if (/\/open-brain-rest\/?$/.test(restUrl)) return restUrl.replace(/\/open-brain-rest\/?$/, "/agent-memory-api");
+  if (/\/agent-memory(?:\/?$)/.test(restUrl)) return restUrl.replace(/\/$/, "");
+  return `${restUrl.replace(/\/$/, "")}/agent-memory`;
 }
 
 function headers(apiKey: string): HeadersInit {
@@ -49,7 +51,7 @@ async function agentMemoryFetch<T>(
 
 export function agentMemoryDefaults() {
   return {
-    workspaceId: process.env.AGENT_MEMORY_WORKSPACE_ID || "ob1-staging",
+    workspaceId: process.env.AGENT_MEMORY_WORKSPACE_ID || "default",
     projectId: process.env.AGENT_MEMORY_PROJECT_ID || "",
   };
 }

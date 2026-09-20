@@ -39,9 +39,9 @@ Provides 9 pages for managing your thoughts:
 
 | Credential | Where to get it | Where it goes |
 |------------|----------------|---------------|
-| `NEXT_PUBLIC_API_URL` | Your Supabase project URL + `/functions/v1/open-brain-rest` | `.env` or hosting env vars |
-| `AGENT_MEMORY_API_URL` | Optional. Your Supabase project URL + `/functions/v1/agent-memory-api` | `.env` or hosting env vars |
-| `AGENT_MEMORY_WORKSPACE_ID` | Optional. Default workspace for Agent Memory governance views | `.env` or hosting env vars |
+| `NEXT_PUBLIC_API_URL` | OB1 API base URL, such as `http://127.0.0.1:8787` on OCI | `.env` or hosting env vars |
+| `AGENT_MEMORY_API_URL` | Optional. Native OCI URL is `http://127.0.0.1:8787/agent-memory`; Supabase remains supported | `.env` or hosting env vars |
+| `AGENT_MEMORY_WORKSPACE_ID` | Optional. Default workspace for Agent Memory governance views (native default: `default`) | `.env` or hosting env vars |
 | `AGENT_MEMORY_PROJECT_ID` | Optional. Default project filter for Agent Memory governance views | `.env` or hosting env vars |
 | `SESSION_SECRET` | Generate: `openssl rand -hex 32` | `.env` or hosting env vars |
 | `AUTH_COOKIE_SECURE` | Optional. Force HTTPS-only auth cookies when set to `true`; leave unset for localhost previews | `.env` or hosting env vars |
@@ -79,6 +79,11 @@ NEXT_PUBLIC_API_URL=https://YOUR-PROJECT-REF.supabase.co/functions/v1/open-brain
 # Optional if your Agent Memory function follows the standard slug:
 # AGENT_MEMORY_API_URL=https://YOUR-PROJECT-REF.supabase.co/functions/v1/agent-memory-api
 # AGENT_MEMORY_WORKSPACE_ID=ob1-staging
+# OCI-native example:
+# NEXT_PUBLIC_API_URL=http://127.0.0.1:8787
+# AGENT_MEMORY_API_URL=http://127.0.0.1:8787/agent-memory
+# AGENT_MEMORY_WORKSPACE_ID=default
+# AGENT_MEMORY_PROJECT_ID=ob1
 SESSION_SECRET=your-32-char-secret-here
 # Optional on HTTPS hosts:
 # AUTH_COOKIE_SECURE=true
@@ -199,7 +204,8 @@ The dashboard calls these endpoints on your Open Brain REST API:
 | `/thoughts?type=task` | GET | Workflow board (filtered by type) |
 | `/thought/:id` | PUT | Workflow board (status/priority updates) |
 
-Agent Memory pages also call these endpoints on `agent-memory-api`:
+Agent Memory pages also call these endpoints on `agent-memory-api` or the OCI
+native `/agent-memory` base:
 
 | Endpoint | Method | Used By |
 |----------|--------|---------|

@@ -1,0 +1,25 @@
+[Unit]
+Description=OB1 NextJS dashboard
+After=network-online.target ob1-api.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=avery
+Group=avery
+WorkingDirectory=/home/avery/OB1/dashboards/open-brain-dashboard-next
+EnvironmentFile=/etc/ob1/dashboard.env
+Environment=HOSTNAME=0.0.0.0
+Environment=PORT=3000
+ExecStart=/usr/bin/node-24 .next/standalone/server.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/avery/OB1/dashboards/open-brain-dashboard-next/.next
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

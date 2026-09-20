@@ -1,0 +1,36 @@
+{
+  "name": "@ob1/oci-node",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/server.ts",
+    "doctor": "tsx src/doctor.ts",
+    "migrate": "tsx src/migrate.ts",
+    "start": "node dist/src/server.js",
+    "test": "node --test --import tsx test/**/*.test.ts"
+  },
+  "dependencies": {
+    "@hono/mcp": "latest",
+    "@hono/node-server": "latest",
+    "@modelcontextprotocol/sdk": "latest",
+    "dotenv": "latest",
+    "fast-xml-parser": "latest",
+    "file-type": "latest",
+    "hono": "latest",
+    "jszip": "latest",
+    "mammoth": "latest",
+    "pg": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/pg": "latest",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}

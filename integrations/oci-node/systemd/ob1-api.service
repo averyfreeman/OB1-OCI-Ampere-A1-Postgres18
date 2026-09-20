@@ -1,0 +1,23 @@
+[Unit]
+Description=OB1 OCI Node API and ingestion worker
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=avery
+Group=avery
+WorkingDirectory=/home/avery/OB1/integrations/oci-node
+EnvironmentFile=/etc/ob1/ob1.env
+ExecStart=/usr/bin/node-24 dist/src/server.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/ob1
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

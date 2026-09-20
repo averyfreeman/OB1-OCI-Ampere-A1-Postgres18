@@ -62,14 +62,16 @@ openclaw --profile ob1-agent-memory plugins install . --link
     entries: {
       "nbj-ob1-agent-memory": {
         config: {
-          endpoint: "https://YOUR_PROJECT_REF.supabase.co/functions/v1/agent-memory-api",
+          endpoint: "http://<tailscale-host>:8787/agent-memory",
           accessKey: {
             source: "file",
             provider: "ob1_agent_memory",
             id: "value"
           },
           workspaceId: "workspace_123",
-          projectId: "project_456"
+          projectId: "project_456",
+          agentId: "openclaw-code",
+          clientSurface: "openclaw"
         }
       }
     }

@@ -11,14 +11,17 @@ async function loginAction(formData: FormData) {
     return { error: "API key is required" };
   }
 
-  // Validate key against health endpoint
+  // Health is intentionally unauthenticated for monitoring, so validate the
+  // credential against an authenticated read endpoint before creating a
+  // dashboard session.
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   try {
-    const res = await fetch(`${apiUrl}/health`, {
+    const res = await fetch(`${apiUrl}/stats`, {
       headers: { "x-brain-key": apiKey },
+      cache: "no-store",
     });
     if (!res.ok) {
-      return { error: "Invalid API key or service unavailable" };
+      return { error: res.status === 401 ? "Invalid OB1 access key" : "OB1 service unavailable" };
     }
   } catch {
     return { error: "Could not reach API. Check your connection." };

@@ -28,7 +28,11 @@ const entitiesSchema = Type.Object({
 
 export const recallParameters = Type.Object({
   schema_version: schemaVersion("openbrain.openclaw.recall.v1"),
+  workspace_id: Type.Optional(Type.String()),
   project_id: optionalNullableString(),
+  session_id: optionalNullableString(),
+  agent_id: optionalNullableString(),
+  client_surface: optionalNullableString(),
   task_id: optionalNullableString(),
   flow_id: optionalNullableString(),
   task_type: optionalNullableString(),
@@ -38,13 +42,17 @@ export const recallParameters = Type.Object({
     provider: optionalNullableString(),
     model: optionalNullableString(),
   })),
+  intent_hint: Type.Optional(Type.String()),
   query: Type.String(),
   entities: Type.Optional(entitiesSchema),
   scope: Type.Optional(Type.Object({
     visibility: optionalNullableString(),
+    mode: Type.Optional(Type.String()),
     project_only: Type.Optional(Type.Boolean()),
     include_unconfirmed: Type.Optional(Type.Boolean()),
     include_stale: Type.Optional(Type.Boolean()),
+    domain_mode: Type.Optional(Type.String()),
+    domain: Type.Optional(Type.String()),
   })),
   limits: Type.Optional(Type.Object({
     max_items: Type.Optional(Type.Integer({ minimum: 1, maximum: 50 })),
@@ -76,12 +84,17 @@ const memoryPayloadSchema = Type.Object({
 
 export const writebackParameters = Type.Object({
   schema_version: schemaVersion("openbrain.openclaw.writeback.v1"),
+  workspace_id: Type.Optional(Type.String()),
   project_id: optionalNullableString(),
+  session_id: optionalNullableString(),
+  agent_id: optionalNullableString(),
+  client_surface: optionalNullableString(),
   task_id: optionalNullableString(),
   flow_id: optionalNullableString(),
   step_id: optionalNullableString(),
   idempotency_key: optionalNullableString(),
   content_hash: optionalNullableString(),
+  intent_hint: Type.Optional(Type.String()),
   channel: Type.Optional(channelSchema),
   runtime: Type.Optional(runtimeSchema),
   models_used: Type.Optional(Type.Array(Type.Object({
@@ -112,6 +125,7 @@ export const writebackParameters = Type.Object({
     stale_after_days: optionalNullableInteger(),
   })),
   visibility: Type.Optional(Type.Object({
+    level: Type.Optional(Type.String()),
     workspace: optionalNullableString(),
     project: optionalNullableString(),
     channel: optionalNullableString(),

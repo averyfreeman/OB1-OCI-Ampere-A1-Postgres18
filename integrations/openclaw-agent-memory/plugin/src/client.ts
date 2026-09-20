@@ -3,6 +3,9 @@ export type AgentMemoryConfig = {
   accessKey: string;
   workspaceId: string;
   projectId?: string;
+  sessionId?: string;
+  agentId?: string;
+  clientSurface?: string;
   requireReviewByDefault?: boolean;
   includeUnconfirmedRecall?: boolean;
 };
@@ -61,6 +64,9 @@ export class AgentMemoryClient {
         schema_version: "openbrain.openclaw.recall.v1",
         workspace_id: this.config.workspaceId,
         project_id: projectId,
+        session_id: typeof request.session_id === "string" ? request.session_id : this.config.sessionId || null,
+        agent_id: typeof request.agent_id === "string" ? request.agent_id : this.config.agentId || null,
+        client_surface: typeof request.client_surface === "string" ? request.client_surface : this.config.clientSurface || "openclaw",
         scope: {
           include_unconfirmed: this.config.includeUnconfirmedRecall ?? false,
           ...(typeof request.scope === "object" && request.scope ? request.scope : {}),
@@ -79,6 +85,9 @@ export class AgentMemoryClient {
         schema_version: "openbrain.openclaw.writeback.v1",
         workspace_id: this.config.workspaceId,
         project_id: projectId,
+        session_id: typeof request.session_id === "string" ? request.session_id : this.config.sessionId || null,
+        agent_id: typeof request.agent_id === "string" ? request.agent_id : this.config.agentId || null,
+        client_surface: typeof request.client_surface === "string" ? request.client_surface : this.config.clientSurface || "openclaw",
         provenance: {
           default_status: "generated",
           confidence: 0.5,

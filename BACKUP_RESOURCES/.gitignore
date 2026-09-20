@@ -1,0 +1,5 @@
+# Backup materials are local-only by default.
+# To intentionally version one resource, use:
+#   git add -f BACKUP_RESOURCES/<path>
+*
+!.gitignore
