@@ -1,27 +1,27 @@
-## Contribution Type
+## Change type
 
-<!-- Check one -->
-- [ ] Recipe (`/recipes`)
-- [ ] Schema (`/schemas`)
-- [ ] Dashboard (`/dashboards`)
-- [ ] Integration (`/integrations`)
-- [ ] Skill (`/skills`)
-- [ ] Repo improvement (docs, CI, templates)
+- [ ] OCI runtime
+- [ ] Operator dashboard
+- [ ] GitHub Pages landing
+- [ ] Documentation
+- [ ] CI or maintenance
 
-## What does this do?
+## Summary
 
-<!-- 1-3 sentences describing what this contribution adds or changes -->
+<!-- Describe the production behavior or maintenance contract changed. -->
 
-## Requirements
+## Verification
 
-<!-- What external services, tools, or APIs does this need? (e.g., Gmail API, Node.js 18+) -->
-<!-- If this depends on a canonical skill or primitive, mention it here and declare it in metadata.json -->
+<!-- List the exact commands run and their results. -->
 
-## Checklist
+    npm test
+    npm run build
+    npm run lint
 
-- [ ] I've read [CONTRIBUTING.md](../CONTRIBUTING.md)
-- [ ] My contribution has a `README.md` with prerequisites, step-by-step instructions, and expected outcome
-- [ ] My `metadata.json` has all required fields
-- [ ] If my contribution depends on a skill or primitive, I declared it in metadata.json and linked it in the README
-- [ ] I tested this on my own Open Brain instance
-- [ ] No credentials, API keys, or secrets are included
+## Safety checklist
+
+- [ ] No credentials, API keys, tokens, or private environment files are included.
+- [ ] No raw transcripts, reasoning traces, or large code blocks were added.
+- [ ] Database changes are additive and preserve existing contracts.
+- [ ] Active systemd and Pages paths remain valid.
+- [ ] Archived resources were not reintroduced accidentally.

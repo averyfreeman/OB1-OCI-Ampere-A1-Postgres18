@@ -137,4 +137,5 @@ Before opening a new importer PR, verify:
 - Local paths are relative or redacted.
 - Source URLs do not contain secrets.
 - Re-running the importer does not create uncontrolled duplicates.
-- The expected verification path is documented: Supabase query, recipe report, MCP search, or all three.
+- The expected verification path is documented: an OCI API query, a migration
+  or doctor report, an MCP search, or all three.

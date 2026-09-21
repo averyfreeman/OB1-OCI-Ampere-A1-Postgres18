@@ -15,7 +15,6 @@ const AGENT_MEMORY_API_URL =
 
 function deriveAgentMemoryUrl(restUrl?: string) {
   if (!restUrl) return undefined;
-  if (/\/open-brain-rest\/?$/.test(restUrl)) return restUrl.replace(/\/open-brain-rest\/?$/, "/agent-memory-api");
   if (/\/agent-memory(?:\/?$)/.test(restUrl)) return restUrl.replace(/\/$/, "");
   return `${restUrl.replace(/\/$/, "")}/agent-memory`;
 }

@@ -1,7 +1,8 @@
 # OB1 OCI Node deployment
 
-This is the native Node 24 runtime for the OCI ARM instance. It deliberately
-does not replace the Supabase/Deno integrations in this repository.
+This is the native Node 24 runtime for the OCI ARM instance and the active API
+source for this checkout. Alternate runtimes and integrations are preserved
+under BACKUP_RESOURCES/integrations/ and are not tracked by default.
 
 ## Contracts
 
@@ -74,15 +75,15 @@ Enable the installed PostgreSQL 18 unit, keep PostgreSQL bound to loopback,
 and create the clean `ob1` database plus `ob1_app` role. Do not open 5432 in
 OCI ingress.
 
-2. Create `/etc/ob1/ob1.env` from `.env.example`, adding the supplied API keys
+1. Create `/etc/ob1/ob1.env` from `.env.example`, adding the supplied API keys
    and a newly generated `OB1_BRAIN_KEY`. Keep it mode `0600`, owned by
    `avery:avery`.
 
-3. Create `/etc/ob1/dashboard.env` with `NEXT_PUBLIC_API_URL` set to the
+1. Create `/etc/ob1/dashboard.env` with `NEXT_PUBLIC_API_URL` set to the
    Tailscale URL, `SESSION_SECRET` set to a 32+ character value, and
    `NEXT_PUBLIC_AGENT_MEMORY_ENABLED=false`.
 
-4. Apply the schema and verify the provider/embedding contract:
+1. Apply the schema and verify the provider/embedding contract:
 
 ```bash
 cd /home/avery/OB1/integrations/oci-node
@@ -95,7 +96,7 @@ pending, imported evidence. If `OB1_DEFAULT_WORKSPACE_ID` is changed to a new
 workspace, explicitly migrate or re-import those records before using that
 workspace.
 
-5. Build the dashboard with the dashboard environment loaded, install the
+1. Build the dashboard with the dashboard environment loaded, install the
    two unit files, then enable `ob1-api` and `ob1-dashboard`.
 
 Retained originals live outside the repository at `/var/lib/ob1/uploads`,

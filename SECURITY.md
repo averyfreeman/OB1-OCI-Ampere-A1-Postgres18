@@ -14,19 +14,21 @@ We will acknowledge your report within 48 hours and aim to provide a fix or miti
 
 ## Scope
 
-This policy covers the contents of this repository: contribution templates, metadata schemas, CI workflows, and community documentation. It does not cover the upstream Open Brain infrastructure (Supabase instance, MCP server, etc.).
+This policy covers the tracked OCI API, operator dashboard, Pages landing page,
+operational documentation, and CI workflows. It does not cover local
+BACKUP_RESOURCES contents or infrastructure outside this repository.
 
 ## What Counts as a Vulnerability
 
 - CI workflows that could be exploited (e.g., script injection via PR titles or branch names)
 - Credentials, API keys, or secrets accidentally committed to the repo
-- Contribution templates or examples that encourage insecure practices
+- Operational examples or documentation that encourage insecure practices
 
 ## What Does NOT Count
 
-- Bugs in individual community contributions (report those as regular issues)
-- Feature requests or general feedback (use Discussions or Issues)
+- Feature requests or general feedback
 
 ## Credit
 
-We are happy to credit reporters in release notes or CONTRIBUTORS.md unless you prefer to remain anonymous.
+We are happy to credit reporters in release notes unless you prefer to remain
+anonymous.

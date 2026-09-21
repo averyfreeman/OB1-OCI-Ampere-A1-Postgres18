@@ -13,7 +13,7 @@ jobs:
   label:
     runs-on: ubuntu-latest
     steps:
-      - name: Detect contribution types and apply labels
+      - name: Detect production surface and apply labels
         uses: actions/github-script@v7
         with:
           script: |
@@ -26,25 +26,19 @@ jobs:
 
             const labels = new Set();
             const pathMap = {
-              'recipes/': 'recipe',
-              'schemas/': 'schema',
-              'dashboards/': 'dashboard',
-              'integrations/': 'integration',
-              'skills/': 'skill',
-              'primitives/': 'primitive',
-              'extensions/': 'extension',
+              "integrations/oci-node/": "runtime",
+              "dashboards/": "dashboard",
+              "docs/": "documentation",
+              ".github/": "ci",
+              ".claude/": "maintenance",
             };
 
             for (const file of files) {
               for (const [prefix, label] of Object.entries(pathMap)) {
-                if (file.filename.startsWith(prefix) && !file.filename.includes('_template/')) {
-                  labels.add(label);
-                }
+                if (file.filename.startsWith(prefix)) labels.add(label);
               }
-
-              // Label docs and repo-level markdown changes
-              if (file.filename.startsWith('docs/') || (file.filename.endsWith('.md') && !file.filename.includes('/'))) {
-                labels.add('documentation');
+              if (file.filename.endsWith(".md") && !file.filename.includes("/")) {
+                labels.add("documentation");
               }
             }
 
@@ -55,7 +49,7 @@ jobs:
                 issue_number: context.issue.number,
                 labels: [...labels],
               });
-              console.log(`Applied labels: ${[...labels].join(', ')}`);
+              console.log("Applied labels:", [...labels].join(", "));
             } else {
-              console.log('No contribution directories detected, no labels applied.');
+              console.log("No active production surface detected.");
             }

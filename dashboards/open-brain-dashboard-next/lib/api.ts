@@ -24,7 +24,7 @@ function headers(apiKey: string): HeadersInit {
 }
 
 /**
- * Authenticated JSON fetch against the open-brain-rest Edge Function.
+ * Authenticated JSON fetch against the native OCI API.
  *
  * Exported so dashboard extensions (see EXTENSIONS.md) can reuse the auth
  * header + error-translation plumbing without duplicating it.

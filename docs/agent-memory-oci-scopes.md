@@ -158,4 +158,3 @@ memory stays owned by the operator, while each harness contributes useful,
 reviewable context. Practical OB1 systems and further working notes are
 available from [Nate’s newsletter](https://substack.com/@natesnewsletter) and
 [natebjones.com](https://natebjones.com).
-

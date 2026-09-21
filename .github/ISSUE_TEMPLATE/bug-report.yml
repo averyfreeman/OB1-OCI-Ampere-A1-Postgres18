@@ -10,9 +10,9 @@ body:
   - type: input
     id: contribution
     attributes:
-      label: Which contribution?
-      description: The name and category (e.g., "recipes/email-history-import" or "skills/panning-for-gold")
-      placeholder: recipes/email-history-import
+      label: Which production surface?
+      description: Identify the API, dashboard, Pages landing, documentation, or CI surface.
+      placeholder: integrations/oci-node
     validations:
       required: true
 
@@ -51,8 +51,8 @@ body:
       label: Environment
       description: Any relevant details about your setup.
       placeholder: |
-        - Supabase plan: Free
-        - OS: macOS 15
-        - Node version: 22
+        - OS:
+        - Node version:
+        - Deployment or service:
     validations:
       required: false

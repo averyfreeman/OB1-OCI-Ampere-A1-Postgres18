@@ -1,17 +1,13 @@
-# Dashboards
+# Active dashboards
 
-https://github.com/user-attachments/assets/9454662f-2648-4928-8723-f7d52e94e9b8
+This directory contains only dashboard resources used by the current
+deployment.
 
-Frontend templates you can host on Vercel or Netlify, pointed at your Supabase backend. Instant UI for your brain.
+| Surface | Purpose | Deployment |
+| --- | --- | --- |
+| [open-brain-dashboard-next/](open-brain-dashboard-next/) | Operator dashboard for the OCI API | systemd service ob1-dashboard on port 3000 |
+| [ob1-canonical-landing/](ob1-canonical-landing/) | Static public project landing page | GitHub Pages via [deploy-pages.yml](../.github/workflows/deploy-pages.yml) |
 
-*No community dashboards yet — be the first to contribute one.*
-
-## Ideas
-
-- Personal knowledge dashboard
-- Weekly review view
-- Mobile-friendly capture UI
-
-## Contributing
-
-Dashboards are open for community contributions. See [CONTRIBUTING.md](../CONTRIBUTING.md) for details.
+Alternate dashboards and the scaffold template are preserved locally under
+BACKUP_RESOURCES/dashboards/ and are not tracked by default. Restore one only
+for an explicit migration or comparison task.
